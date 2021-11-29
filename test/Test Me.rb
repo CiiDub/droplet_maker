@@ -1,3 +1,3 @@
 #!/usr/bin/env ruby
 
-puts "It Works!.., probably."
+`osascript -e 'display dialog "File Path: #{ARGV[0]}" with title "It Worked"'`

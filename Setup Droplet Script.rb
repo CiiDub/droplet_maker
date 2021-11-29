@@ -21,6 +21,7 @@ Dir.chdir proj_root do
 		f.write drop_script
 	end unless File.exist? 'droplet_script.applescript'
 end
+
 __END__
 
 on run(argv)
@@ -57,7 +58,7 @@ end run_shell_script
 on format_params(input_files)
 	set params to ""
 	repeat with input_file in input_files
-		set param to POSIX path of dropfile
+		set param to POSIX path of input_file
 		set params to params & " " & quoted form of param
 	end repeat
 end format_params
