@@ -61,11 +61,11 @@ on format_params(input_files)
 		set param to POSIX path of input_file
 		set params to params & " " & quoted form of param
 	end repeat
-	# Sets the last parameter to the path of the app bundle.
 	# Delete or comment out line to remove path and leave other params.
 	path_to_app(params)
 end format_params
 
+# Sets the last parameter to the path of the app bundle.
 on path_to_app(params)
 	set home to POSIX path of (path to me)
 	set params to params & " " & quoted form of home
