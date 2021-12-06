@@ -1,10 +1,4 @@
 #!/usr/bin/env ruby
-a_script, drop_script = DATA.read.split( "##SPLIT HERE\n" )
-
-test_root = `osascript -e $'#{a_script}' 'get_dir'`.chomp
-unless File.directory? test_root
-	exec "osascript -e $'#{a_script}' 'err_msg'"
-end
 
 def if_a_test ( r )
 	is_dm_proj_dir = r.split( "/" )[-1].chomp == 'Droplet Maker'
@@ -12,14 +6,24 @@ def if_a_test ( r )
 	is_dm_proj_dir && is_dm_active_proj ? "#{r}test/" : r
 end
 
+a_script, drop_script = DATA.read.split( "##SPLIT HERE\n" )
+
+test_root = `osascript -e $'#{a_script}' 'get_dir'`.chomp
+
 proj_root = if_a_test( test_root )
+
+unless File.directory? test_root
+	exec "osascript -e $'#{a_script}' 'err_msg'"
+end
 
 Dir.chdir proj_root do
  	Dir.mkdir 'build' unless Dir.exist? 'build'
 	
+	return if File.exist? 'droplet_script.applescript'
+	
 	File.open 'droplet_script.applescript', 'w' do | f |
 		f.write drop_script
-	end unless File.exist? 'droplet_script.applescript'
+	end
 end
 
 __END__
