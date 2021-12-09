@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 def if_a_test ( r )
-	is_dm_proj_dir = r.split( "/" )[-1].chomp == 'Droplet Maker'
+	is_dm_proj_dir = r.split( "/" )[-1] == 'Droplet Maker'
 	is_dm_active_proj = ENV['BBEDIT_ACTIVE_PROJECT'].split( '/' )[-1].chomp == 'Droplet Maker.bbprojectd'
 	is_dm_proj_dir && is_dm_active_proj ? "#{r}test/" : r
 end
@@ -12,9 +12,7 @@ test_root = `osascript -e $'#{a_script}' 'get_dir'`.chomp
 
 proj_root = if_a_test( test_root )
 
-unless File.directory? test_root
-	exec "osascript -e $'#{a_script}' 'err_msg'"
-end
+exec "osascript -e $'#{a_script}' 'err_msg' > /dev/null" unless File.directory? test_root
 
 Dir.chdir proj_root do
  	Dir.mkdir 'build' unless Dir.exist? 'build'
@@ -37,7 +35,7 @@ on run(argv)
 end run
 
 on err_msg()
-	tell application "BBEdit" to display dialog "The Setup Droplet command expects a BBEdit project with a main directory. It will make a file \'droplet_script.applescript\', and a \'build\' folder in that project folder." with title "This is not a project." buttons {"OK"} default button "OK" with icon stop
+	tell application "BBEdit" to display dialog "The Setup Droplet command expects a BBEdit project where it\'s first item in the side bar is a folder.\nIt will make a file \'droplet_script.applescript\', and a \'build\' folder in that project folder." with title "This is not a project." buttons {"OK"} default button "OK" with icon stop
 end err_msg
 
 on get_dir()
@@ -71,7 +69,7 @@ end format_params
 
 # Sets the last parameter to the path of the app bundle.
 on path_to_app(params)
-	set home to POSIX path of (path to me)
+	set home to POSIX path of ((path to me as text) & "::")
 	set params to params & " " & quoted form of home
 end path_to_app 
 
