@@ -11,7 +11,7 @@ end
 desc 'Installs scripts into package bundle.'
 task install: bbpackage do
 	updatedfiles = []
-	['Build Droplet.rb', 'Setup Droplet Script.rb'].each do | localfile |
+	['Build.rb', 'Setup.rb'].each do | localfile |
 		installedfile = File.join bbpackage, localfile
 		next if uptodate? installedfile, [localfile]
 		updatedfiles << localfile

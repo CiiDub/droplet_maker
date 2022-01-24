@@ -49,13 +49,14 @@ def icns_from_png
 end
 
 def cp_icns( app_bundle )
-	icon = "#{app_bundle}/Contents/Resources/droplet.icns"
+	icon_path = "#{app_bundle}/Contents/Resources/"
+	get_icon_name = -> ( icon_path ) { Dir["#{icon_path}*.icns"].first }
+	icon = "#{ get_icon_name.call( icon_path ) }"
 	FileUtils.mv 'icon.icns', icon
 end
 
 name, pwd = setup
-app_bundle = "build/#{name}".sub( /\.[a-z]{2,4}\b/, '.app' )
-
+app_bundle = "build/#{name}".sub( /\.[a-z]+$/, '.app' )
 Dir.chdir pwd do
  	check_if_setup 
 	build_app( name, app_bundle )
