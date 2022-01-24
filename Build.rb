@@ -51,7 +51,7 @@ end
 def cp_icns( app_bundle )
 	icon_path = "#{app_bundle}/Contents/Resources/"
 	get_icon_name = -> ( icon_path ) { Dir["#{icon_path}*.icns"].first }
-	icon = "#{ get_icon_name.call( icon_path ) }"
+	icon = get_icon_name.call( icon_path )
 	FileUtils.mv 'icon.icns', icon
 end
 
