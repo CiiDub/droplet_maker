@@ -2,7 +2,7 @@
 
 def if_a_test ( r )
 	is_dm_proj_dir = r.split( "/" )[-1] == 'Droplet Maker'
-	is_dm_active_proj = ENV['BBEDIT_ACTIVE_PROJECT'].split( '/' )[-1].chomp == 'Droplet Maker.bbprojectd'
+	is_dm_active_proj = ENV['BBEDIT_ACTIVE_PROJECT'].split( '/' ).last.chomp == 'Droplet Maker.bbprojectd'
 	is_dm_proj_dir && is_dm_active_proj ? "#{r}test/" : r
 end
 
@@ -71,7 +71,7 @@ end format_params
 on path_to_app(params)
 	set home to POSIX path of ((path to me as text) & "::")
 	set params to params & " " & quoted form of home
-end path_to_app 
+end path_to_app
 
 # Runs if files are dropped on app bundle.
 on open drop_files
