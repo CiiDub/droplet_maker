@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 
 def if_a_test ( r )
-	is_dm_proj_dir = r.split( "/" )[-1] == 'Droplet Maker'
-	is_dm_active_proj = ENV['BBEDIT_ACTIVE_PROJECT'].split( '/' ).last.chomp == 'Droplet Maker.bbprojectd'
+	if ENV.has_key? 'BBEDIT_ACTIVE_PROJECT'
+		is_dm_proj_dir = r.split( "/" ).last == 'Droplet Maker'
+		is_dm_active_proj = ENV['BBEDIT_ACTIVE_PROJECT'].split( '/' ).last.chomp == 'Droplet Maker.bbprojectd'
+	end
 	is_dm_proj_dir && is_dm_active_proj ? "#{r}test/" : r
 end
 
@@ -16,12 +18,9 @@ exec "osascript -e $'#{a_script}' 'err_msg' > /dev/null" unless File.directory? 
 
 Dir.chdir proj_root do
  	Dir.mkdir 'build' unless Dir.exist? 'build'
-	
 	return if File.exist? 'droplet_script.applescript'
-	
-	File.open 'droplet_script.applescript', 'w' do | f |
-		f.write drop_script
-	end
+	File.open( 'droplet_script.applescript', 'w' ){ | f | f.write drop_script }
+	system "afplay '/System/Library/Sounds/Glass.aiff' 2> /dev/null"
 end
 
 __END__
@@ -35,6 +34,7 @@ on run(argv)
 end run
 
 on err_msg()
+	beep
 	tell application "BBEdit" to display dialog "The Setup Droplet command expects a BBEdit project where it\'s first item in the side bar is a folder.\nIt will make a file \'droplet_script.applescript\', and a \'build\' folder in that project folder." with title "This is not a project." buttons {"OK"} default button "OK" with icon stop
 end err_msg
 
