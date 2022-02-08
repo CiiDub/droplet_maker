@@ -1,7 +1,7 @@
 bbpackage = File.expand_path "~/Library/Application Support/BBEdit/Packages/" + 'Droplet Maker.bbpackage/Contents/Scripts/Droplet Maker/'
 new_install = false
 
-desc 'Make Droplet Maker package bundle in BBEdit folder.'
+desc 'Makes Droplet Maker package bundle in BBEdit folder.'
 directory bbpackage do
 	puts 'Fresh install of Droplet Maker.'
 	puts "Restart BBEdit."
@@ -30,10 +30,11 @@ task :uninstall do
 end
 
 namespace 'test' do
-	desc 'Removes test files.'
+	desc 'Removes test files from Droplet Maker project.'
 	task :cleanup do
 		['test/I think it worked.txt', 'test/droplet_script.applescript', 'test/icon.icns', 'test/build'].each do | file |
-			rm_rf file
+			rm_rf file, verbose: false
 		end
+		puts "Droplet Maker's test directory is reset."
 	end
 end
