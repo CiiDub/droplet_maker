@@ -32,9 +32,13 @@ end
 
 def check_if_setup( name )	
 	has_target = -> {
-		return false unless File.file?( name )
-		return false unless File.open( name, &:gets ) =~ /^#![\w\/]+[ \w]/ 
-		true
+		begin
+			return false unless File.file?( name )
+			return false unless File.open( name, &:gets ) =~ /^#![\w\/]+[ \w]/ 
+			true
+		rescue
+			false
+		end
 	}.call
 	return true if has_target && Dir.exist?( 'build' ) && File.exist?( 'droplet_script.applescript' )
 	msg   =  '• Did you run \'Droplet Maker > Setup\'?'
@@ -74,7 +78,7 @@ end
 def cp_icns( app_bundle )
 	begin
 		icon_path = "#{ app_bundle }/Contents/Resources/"
-		is_a_drop = File.foreach( 'droplet_script.applescript' ){ | l | puts true if l =~ /^on open drop_files$/ }
+		is_a_drop = File.foreach('droplet_script.applescript').find { |l| l.match( /on open drop_files/ ) }
 		icon      = is_a_drop ? "#{ icon_path }droplet.icns" : "#{ icon_path }applet.icns"
 		FileUtils.mv 'icon.icns', icon
 		true
